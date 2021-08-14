@@ -24,10 +24,6 @@ gdp_per_capita = pd.read_csv(data_path + "gdp_per_capita.csv", thousands=',', de
                              encoding='latin1', na_values="n/a")
 
 # 데이터 준비
-country_stats = prepare_country_stats(oecd_bli, gdp_per_capita)
-X = np.c_[country_stats['GDP per capita']]
-y = np.c_[country_stats['Life satisfaction']]
-
 def prepare_country_stats(oecd_bli, gdp_per_capita):
     oecd_bli = oecd_bli[oecd_bli["INEQUALITY"] == "TOT"]
     oecd_bli = oecd_bli.pivot(index="Country", columns="Indicator", values="Value")
@@ -41,6 +37,11 @@ def prepare_country_stats(oecd_bli, gdp_per_capita):
     remove_indices = [0, 1, 6, 8, 33, 34, 35]
     keep_indices = list(set(range(36)) - set(remove_indices))
     return full_country_stats[["GDP per capita", 'Life satisfaction']].iloc[keep_indices]
+
+country_stats = prepare_country_stats(oecd_bli, gdp_per_capita)
+X = np.c_[country_stats['GDP per capita']]
+y = np.c_[country_stats['Life satisfaction']]
+
 
 # Graph setting
 mpl.rc('axes', labelsize=14)
