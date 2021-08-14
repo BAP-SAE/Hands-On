@@ -1,11 +1,17 @@
+# Packages
 import sys
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
-import pandas as pd
-import sklearn.linear_model
 import os
 
+import numpy as np
+import pandas as pd
+
+import sklearn
+import sklearn.linear_model
+
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# Version Check
 assert sys.version_info >= (3, 5), "need to check sys version"
 assert sklearn.__version__ >= "0.20", "need to check sklearn version"
 
