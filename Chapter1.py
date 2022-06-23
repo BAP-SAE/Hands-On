@@ -24,7 +24,10 @@ assert sklearn.__version__ >= "0.20", "need to check sklearn version"
 data_path = os.path.join("datasets", "lifesat", "")
 
 # 데이터 적재
+oecd_bli_without_thousands = pd.read_csv(data_path + "oecd_bli_2015.csv")
 oecd_bli = pd.read_csv(data_path + "oecd_bli_2015.csv", thousands=',')
+sorted(oecd_bli['Value'])[-10:]
+
 gdp_per_capita = pd.read_csv(data_path + "gdp_per_capita.csv", thousands=',', delimiter='\t',
                              encoding='latin1', na_values="n/a")
 
