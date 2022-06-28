@@ -1,7 +1,6 @@
-#######################################
-# Hands-On Machine Learning
 # Chapter 1) ML Landscape
-#######################################
+
+#TODO: 1장에 있는 그림을 생성하기위한 코드는 실행해보지 않았음
 
 # Packages
 import sys
@@ -24,9 +23,8 @@ assert sklearn.__version__ >= "0.20", "need to check sklearn version"
 data_path = os.path.join("datasets", "lifesat", "")
 
 # 데이터 적재
-oecd_bli_without_thousands = pd.read_csv(data_path + "oecd_bli_2015.csv")
+# oecd_bli_without_thousands = pd.read_csv(data_path + "oecd_bli_2015.csv")
 oecd_bli = pd.read_csv(data_path + "oecd_bli_2015.csv", thousands=',')
-sorted(oecd_bli['Value'])[-10:]
 
 gdp_per_capita = pd.read_csv(data_path + "gdp_per_capita.csv", thousands=',', delimiter='\t',
                              encoding='latin1', na_values="n/a")
@@ -46,6 +44,8 @@ def prepare_country_stats(oecd_bli, gdp_per_capita):
     keep_indices = list(set(range(36)) - set(remove_indices))
     return full_country_stats[["GDP per capita", 'Life satisfaction']].iloc[keep_indices]
 
+
+
 country_stats = prepare_country_stats(oecd_bli, gdp_per_capita)
 X = np.c_[country_stats['GDP per capita']]
 y = np.c_[country_stats['Life satisfaction']]
@@ -60,12 +60,17 @@ mpl.rc('ytick', labelsize=12)
 country_stats.plot(kind='scatter', x='GDP per capita', y='Life satisfaction')
 plt.show()
 
-# Linear model
-model = sklearn.linear_model.LinearRegression()
-
-# Training
-model.fit(X, y)
-
-# Prediction
 X_new = [[22587]]
-print(model.predict(X_new))
+
+# Linear model
+lr_model = sklearn.linear_model.LinearRegression()
+lr_model.fit(X, y)
+print(f"linear_regression: {lr_model.predict(X_new)}")
+
+import sklearn.neighbors
+knn_model = sklearn.neighbors.KNeighborsRegressor(n_neighbors=3)
+knn_model.fit(X, y)
+print(f"k-nearest neighborhodd: {knn_model.predict(X_new)}")
+
+
+
