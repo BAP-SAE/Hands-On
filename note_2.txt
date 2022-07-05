@@ -1,0 +1,36 @@
+# chapter 2
+
+# 1
+데이터 처리 component들이 연속되어 있는 것을 pipeline이라고 함
+
+# 2
+Simple Regression : X 1개, Y 1개
+Multiple Regression : X 여러개, Y 1개
+
+Univariate Regression : Y 1개
+Multivariate Regression : Y 여러개
+
+# 3
+MapReduce -> 배치 학습을 여러 서버로 분할
+구현된 프레임워크 -> 아파치 하둡(Haddop) (http://hadoop.apache.org/)
+Spark의 MLlib (http://spark.apache.org/mllib/)
+
+# 4
+l-0   norm은 벡터에 있는 0이 아닌 원소의 수
+l-inf norm은 벡터에서 가장 큰 절댓값
+
+# 5
+data snooping 편향
+테스트 세트가 모델 선정이나 빌딩에 관여된 경우 일어나는 편향
+
+# 6
+범주형 특성의 범주가 많은 경우 one-hot-encoding은 입력 변수가 너무 많아지는 문제 발생
+의미있는 숫자형 변수로 변환하거나
+representation learning의 일종인 embedding(임베딩) 기법으로 학습 가능한 저차원 벡터로 변환함
+
+# 7
+duck typing : 상속이나 인터페이스 구현이 아니라 객체의 속성이나 메서드가 객체의 유형을 결정하는 방식을 말함
+
+# 8
+Mixin : 파이썬에서 이름에 Mixin이 있으면 객체의 기능을 확장하려는 목적으로 만들어진 클래스를 나타냄
+
