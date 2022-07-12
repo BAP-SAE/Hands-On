@@ -41,35 +41,35 @@ def save_fig(fig_id, tight_layout=True, fig_extension="png", resolution=300):
     plt.savefig(path, format=fig_extension, dpi=resolution)
 
 ###### 1) Load the dataset
-DOWNLOAD_ROOT = "https://raw.githubusercontent.com/rickiepark/handson-ml2/master/"
-HOUSING_PATH = os.path.join("datasets", "housing")
-HOUSING_URL = DOWNLOAD_ROOT + "datasets/housing/housing.tgz"
-
-def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
-    if not os.path.isdir(housing_path):
-        os.makedirs(housing_path)
-    tgz_path = os.path.join(housing_path, "housing.tgz")
-    urllib.request.urlretrieve(housing_url, tgz_path)
-    housing_tgz = tarfile.open(tgz_path)
-    housing_tgz.extractall(path=housing_path)
-    housing_tgz.close()
-
-fetch_housing_data()
+# DOWNLOAD_ROOT = "https://raw.githubusercontent.com/rickiepark/handson-ml2/master/"
+# HOUSING_PATH = os.path.join("datasets", "housing")
+# HOUSING_URL = DOWNLOAD_ROOT + "datasets/housing/housing.tgz"
+#
+# def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
+#     if not os.path.isdir(housing_path):
+#         os.makedirs(housing_path)
+#     tgz_path = os.path.join(housing_path, "housing.tgz")
+#     urllib.request.urlretrieve(housing_url, tgz_path)
+#     housing_tgz = tarfile.open(tgz_path)
+#     housing_tgz.extractall(path=housing_path)
+#     housing_tgz.close()
+#
+# fetch_housing_data()
 
 def load_housing_data(housing_path=HOUSING_PATH):
     csv_path = os.path.join(housing_path, "housing.csv")
     return pd.read_csv(csv_path)
 
 housing = load_housing_data()
-housing.head()                              # 맨 앞 #개의 데이터
-housing.info()                              # 인덱스와 열 정보
-housing['ocean_proximity'].value_counts()   # unique와 개수
-housing.describe()                          # min max 등 수리통계량
+# housing.head()                              # 맨 앞 #개의 데이터
+# housing.info()                              # 인덱스와 열 정보
+# housing['ocean_proximity'].value_counts()   # unique와 개수
+# housing.describe()                          # min max 등 수리통계량
 
-# Simple visualization
-housing.hist(bins=50, figsize=(20,15))
-save_fig("attribute_histogram_plots")
-plt.show()
+# # Simple visualization
+# housing.hist(bins=50, figsize=(20,15))
+# save_fig("attribute_histogram_plots")
+# plt.show()
 
 # Set random_seed
 SEED = 42
@@ -84,8 +84,6 @@ def split_train_test(data, test_ratio):
     return data.iloc[train_indices], data.iloc[test_indices]
 
 train_set, test_set = split_train_test(housing, 0.2)
-len(train_set)
-len(test_set)
 
 # 해시 값을 통한 train_test 분할
 # (id로 추가되는 data도 자동적으로 분할, 중첩이 없도록 --> 책 참고)
@@ -139,7 +137,7 @@ compare_props = pd.DataFrame({
     }).sort_index()
 compare_props["Rand. %error"] = 100 * compare_props["Random"] / compare_props["Overall"] - 100
 compare_props["Strat. %error"] = 100 * compare_props["Stratified"] / compare_props["Overall"] - 100
-compare_props
+
 
 # income_cat 변수 제거
 for set_ in (strat_train_set, strat_test_set):
@@ -148,17 +146,17 @@ for set_ in (strat_train_set, strat_test_set):
 # 2.4 데이터 이해를 위한 탐색과 시각화
 housing = strat_train_set.copy()
 housing.plot(kind="scatter", x="longitude", y="latitude")
-save_fig('bad_visualization_plot')
+# save_fig('bad_visualization_plot')
 
 housing.plot(kind='scatter', x='longitude', y='latitude', alpha=0.1)
-save_fig('better_visualization_plot')
+# save_fig('better_visualization_plot')
 
 housing.plot(kind='scatter', x='longitude', y='latitude', alpha=0.4,
              s=housing['population']/100, label='population', figsize=(10, 7),
              c='median_house_value', cmap=plt.get_cmap('jet'), colorbar=True,
              sharex=False)
 plt.legend()
-save_fig('housing_prices_scatterplot')
+# save_fig('housing_prices_scatterplot')
 
 # 지도사진 추가 등의 세밀한 시각화 조정은 ml2 github에 있음
 pass
@@ -170,11 +168,11 @@ corr_matrix['median_house_value'].sort_values(ascending=False)
 from pandas.plotting import scatter_matrix
 attributes = ['median_house_value', 'median_income', 'total_rooms', 'housing_median_age']
 scatter_matrix(housing[attributes], figsize=(12, 8))
-save_fig('scatter_matrix_plot')
+# save_fig('scatter_matrix_plot')
 
 housing.plot(kind='scatter', x='median_income', y='median_house_value', alpha=0.1)
 plt.axis([0, 16, 0, 550000])
-save_fig("income_vs_house_value_scatterplot")
+# save_fig("income_vs_house_value_scatterplot")
 
 housing["rooms_per_household"] = housing["total_rooms"]/housing["households"]
 housing["bedrooms_per_room"] = housing["total_bedrooms"]/housing["total_rooms"]
@@ -190,8 +188,8 @@ housing_labels = strat_train_set['median_house_value'].copy()
 # 2.5.1 데이터 정제
 # housing.dropna(subset=['total_bedrooms'])               # 옵션 1
 # housing.drop('total_bedrooms', axis=1)                  # 옵션 2
-median = housing['total_bedrooms'].median()             # 옵션 3
-housing['total_bedrooms'].fillna(median, inplace=True)
+# median = housing['total_bedrooms'].median()             # 옵션 3
+# housing['total_bedrooms'].fillna(median, inplace=True)
 
 from sklearn.impute import SimpleImputer
 imputer = SimpleImputer(strategy = 'median')        # 수치형만 가능
@@ -209,14 +207,14 @@ housing_tr = pd.DataFrame(X, columns=housing_num.columns,
 # 2.5.2 텍스트와 범주형 특성 다루기
 housing_cat = housing[['ocean_proximity']]
 housing_cat.head(10)
-
-# ordinal encoding
-from sklearn.preprocessing import OrdinalEncoder
-ordinal_encoder = OrdinalEncoder()
-housing_cat_encoded = ordinal_encoder.fit_transform(housing_cat)
-
-housing_cat_encoded[:10]
-ordinal_encoder.categories_
+#
+# # ordinal encoding
+# from sklearn.preprocessing import OrdinalEncoder
+# ordinal_encoder = OrdinalEncoder()
+# housing_cat_encoded = ordinal_encoder.fit_transform(housing_cat)
+#
+# housing_cat_encoded[:10]
+# ordinal_encoder.categories_
 
 # one-hot-encoding
 from sklearn.preprocessing import OneHotEncoder
@@ -254,6 +252,52 @@ housing_extra_attribs = attr_adder.transform(housing.values)
 # standardization : StandardScaler
 
 # 2.5.5 변환 파이프라인
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 
+num_pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='median')),
+    ('attribs_adder', CombinedAttributesAdder()),
+    ('std_scaler', StandardScaler()),
+])
 
+housing_num_tr = num_pipeline.fit_transform(housing_num)
+
+# housing 데이터의 모든 열에 대해 파이프라인 적용
+from sklearn.compose import ColumnTransformer
+
+num_attribs = list(housing_num)
+cat_attribs = ["ocean_proximity"]
+
+full_pipeline = ColumnTransformer([
+    ('num', num_pipeline, num_attribs),
+    ('cat', OneHotEncoder(), cat_attribs)
+])
+
+housing_prepared = full_pipeline.fit_transform(housing)
+
+# 2.6 모델 선택과 훈련
+# 2.6.1 훈련 세트에서 훈련하고 평가하기
+from sklearn.linear_model import LinearRegression
+
+lin_reg = LinearRegression()
+lin_reg.fit(housing_prepared, housing_labels)
+
+from sklearn.metrics import mean_squared_error
+housing_predictions = lin_reg.predict(housing_prepared)
+lin_mse = mean_squared_error(housing_labels, housing_predictions)
+lin_rmse = np.sqrt(lin_mse)
+lin_rmse
+
+from sklearn.tree import DecisionTreeRegressor
+
+tree_reg = DecisionTreeRegressor()
+tree_reg.fit(housing_prepared, housing_labels)
+
+tree_pred = tree_reg.predict(housing_prepared)
+tree_mse = mean_squared_error(housing_labels, tree_pred)
+tree_rmse = np.sqrt(tree_mse)
+tree_rmse   # 0?!?!?
+
+# 2.6.2 교차 검증을 사용한 평가
 
