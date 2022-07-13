@@ -41,9 +41,9 @@ def save_fig(fig_id, tight_layout=True, fig_extension="png", resolution=300):
     plt.savefig(path, format=fig_extension, dpi=resolution)
 
 ###### 1) Load the dataset
-# DOWNLOAD_ROOT = "https://raw.githubusercontent.com/rickiepark/handson-ml2/master/"
-# HOUSING_PATH = os.path.join("datasets", "housing")
-# HOUSING_URL = DOWNLOAD_ROOT + "datasets/housing/housing.tgz"
+DOWNLOAD_ROOT = "https://raw.githubusercontent.com/rickiepark/handson-ml2/master/"
+HOUSING_PATH = os.path.join("datasets", "housing")
+HOUSING_URL = DOWNLOAD_ROOT + "datasets/housing/housing.tgz"
 #
 # def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
 #     if not os.path.isdir(housing_path):
@@ -174,6 +174,8 @@ housing.plot(kind='scatter', x='median_income', y='median_house_value', alpha=0.
 plt.axis([0, 16, 0, 550000])
 # save_fig("income_vs_house_value_scatterplot")
 
+plt.close("all")
+
 housing["rooms_per_household"] = housing["total_rooms"]/housing["households"]
 housing["bedrooms_per_room"] = housing["total_bedrooms"]/housing["total_rooms"]
 housing["population_per_household"]=housing["population"]/housing["households"]
@@ -300,4 +302,45 @@ tree_rmse = np.sqrt(tree_mse)
 tree_rmse   # 0?!?!?
 
 # 2.6.2 교차 검증을 사용한 평가
+from sklearn.model_selection import cross_val_score
 
+# tree regressor cross validation
+# scoring에 비용 함수가 아니라 효용 함수를 기대함
+# 따라서 neg_를 사용하고 다시 '-' 를 곱해줌
+scores = cross_val_score(tree_reg, housing_prepared, housing_labels,
+                         scoring='neg_mean_squared_error', cv=10)
+
+tree_rmse_scores = np.sqrt(-scores)
+def display_scores(scores):
+    # print("점수", scores)
+    print("평균", scores.mean())
+    print("표준편차", scores.std())
+display_scores(tree_rmse_scores)
+
+# linear regression cross validation
+lin_scores = cross_val_score(lin_reg, housing_prepared, housing_labels,
+                             scoring='neg_mean_squared_error', cv=10)
+lin_rmse_scores = np.sqrt(-lin_scores)
+display_scores(lin_rmse_scores)
+
+# cross validation on random forest
+from sklearn.ensemble import RandomForestRegressor
+rt_reg = RandomForestRegressor()
+rt_reg.fit(housing_prepared, housing_labels)
+rt_pred = rt_reg.predict(housing_prepared)
+rt_rmse = np.sqrt(mean_squared_error(housing_labels, rt_pred))
+print("training error of random forest:", rt_rmse)
+
+rt_reg = RandomForestRegressor()
+rt_scores = cross_val_score(rt_reg, housing_prepared, housing_labels, scoring='neg_mean_squared_error', cv=10)
+rt_rmse_scores = np.sqrt(-rt_scores)
+display_scores(rt_rmse_scores)
+# 과대적합을 막는 방법 1) 모델 규제 강화 2) 변수 추가 3) 샘플 추가
+
+# 파이썬 객체 통채로 저장하는 방법 joblib
+import joblib
+joblib.dump(rt_reg, 'RandomForest_testmodel.pkl')
+loaded_rt = joblib.load('RandomForest_testmodel.pkl')
+
+# 2.7 모델 세부 튜닝
+# 2.7.1 그리드 탐색
